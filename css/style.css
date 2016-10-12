@@ -2,3 +2,9 @@ img {
   width: 25%;
   height: 25%;
 }
+
+.shopItem {
+  border-radius: 2%;
+  border: solid grey thin;
+  padding: 3px;
+}

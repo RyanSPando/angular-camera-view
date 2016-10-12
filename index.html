@@ -5,40 +5,77 @@
     <title>Camera View</title>
     <link type="text/css" rel="stylesheet" href="css/style.css">
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
-  <body ng-init="cameras = [{id: 1,name: 'Nikon D3100 DSLR',image: 'http://ecx.images-amazon.com/images/I/713u2gDQqML._SX522_.jpg',rating: 4,price: 369.99,onSale: true},{id: 2,name: 'Canon EOS 70D',image: 'http://ecx.images-amazon.com/images/I/81U00AkAUWL._SX522_.jpg',rating: 2,price: 1099.0,onSale: false},{id: 3,name: 'Nikon D810A',image:'http://ecx.images-amazon.com/images/I/91wtXIfLl2L._SX522_.jpg',rating: 3,price: 3796.95,onSale: true}]">
+  <body ng-controller="shoppingCart as shoppingCart">
     <div class="container">
       <header>
         <h1>Camera Shop</h1>
       </header>
-      <main>
+      <main ng-controller="items as items">
         <div class="row">
           <div class="col s12 m8">
             <div class="row">
               <div class="col s8 input-field">
-                <input type="text" placeholder="Search here">
+                <input ng-model="items.cameraSearch" type="text" placeholder="Search here">
               </div>
               <div class="col s4 input-field">
-                <select>
+                <select ng-model="items.selectValue">
                   <option value="name">Name</option>
                   <option value="rating">Rating</option>
                 </select>
               </div>
             </div>
           </div>
-          <div class="col s12 m4">
-            <div class="card blue-grey">
-              <div class="card-content white-text">
-                <span class="card-title">Your Cart</span>
-              </div>
-              <div class="card-action">
-                <a href="#">Checkout</a>
+          <div class="col m8">
+            <div ng-repeat="camera in items.cameras | orderBy: items.selectValue | filter: items.cameraSearch">
+              <h2>{{camera.name}}</h2>
+              <img ng-src="{{camera.image}}"/>
+              <h3>Price: {{camera.price | currency}} <h3 ng-if="camera.onSale"> ON SALE</h3></h3>
+              <h3>Rating: {{camera.rating | stars}}</h3>
+              <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="shoppingCart.addItem(camera)">Add to Cart
+              </button>
+            </div>
+          </div>
+          <div class="fixed-parent">
+            <div class="col s12 m4 fixed">
+              <div class="card blue-grey">
+                <div class="card-content white-text">
+                  <span class="card-title">Your Cart</span>
+                  <div class="col s12 shopItem white black-text row valign-wrapper" ng-repeat="item in shoppingCart.basket">
+                    <h6 class="col m1 valign">{{item.quantity}}</h6>
+                    <h5 class="col m10">{{item.name}}</h5>
+                    <button type="button" class="waves-effect waves-light btn red" name="button" ng-click="shoppingCart.removeItem(item)">
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="row">
+                    <span class="left-align col s6">Subtotal</span>
+                    <span class="right-align col s6">{{shoppingCart.subtotal | currency}}</span>
+                  </div>
+                  <div class="row">
+                    <span class="left-align col s6">Tax</span>
+                    <span class="right-align col s6">{{shoppingCart.tax | currency}}</span>
+                  </div>
+                  <div class="row">
+                    <strong>
+                      <h5>
+                        <span class="left-align col s6">Total</span>
+                        <span class="right-align col s6">{{shoppingCart.total | currency}}</span>
+                      </h5>
+                    </strong>
+                  </div>
+                </div>
+                <div class="card-action">
+                  <a href="#">Checkout</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </main>
     </div>
+    <script src="https://use.fontawesome.com/535058757b.js"></script>
     <script src="js/jquery-2.1.4.min.js"></script>
     <script src="js/angular.min.js"></script>
     <script src="js/materialize.min.js"></script>
