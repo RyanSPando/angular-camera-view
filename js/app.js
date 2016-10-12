@@ -11,14 +11,14 @@ $('select').material_select();
     this.cameraSearch = '';
   });
 
-    app.filter('stars', () => {
+    app.filter('stars', ($sce) => {
       return function(input) {
         let stars = '';
 
         for (let i = 0; i < input; i++) {
-          stars += '*';
+          stars += '<i class="fa fa-star" aria-hidden="true"></i>';
         }
-        return stars;
+        return $sce.trustAsHtml(stars);
       };
     });
 
@@ -52,7 +52,6 @@ $('select').material_select();
       this.subtotal -= parseFloat(itemToRemove.price) * parseInt(itemToRemove.quantity);
       this.tax = parseFloat(this.subtotal) * 0.0875;
       this.total = parseFloat(this.subtotal) + parseFloat(this.tax);
-
     };
 
   });
